@@ -3,11 +3,11 @@ import http from 'http';
 import crypto from 'crypto';
 import { exec } from 'child_process';
 
-const USER_PATH = '/home/matan';
+// const USER_PATH = '/home/matan';
 
 const GITHUB_TO_DIR = {
   'MatanMaimon/ResToRent': [
-    `${USER_PATH}/var/www/restorent.co.il`,
+    `/var/www/restorent.co.il`,
   ],
 };
 
