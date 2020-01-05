@@ -35,7 +35,8 @@ http
         }
       }
     });
-
+    res.write('DONE!');
+    res.write(req);
     res.end();
   })
   .listen(8073);
