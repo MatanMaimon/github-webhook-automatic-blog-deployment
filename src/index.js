@@ -3,46 +3,11 @@ import http from 'http';
 import crypto from 'crypto';
 import { exec } from 'child_process';
 
-const USER_PATH = '/home/rwieruch';
+const USER_PATH = '/home/matan';
 
 const GITHUB_TO_DIR = {
-  'rwieruch/gatsby-personal-brand': [
-    `${USER_PATH}/Websites/blog_iamliesa`,
-    `${USER_PATH}/Websites/blog_robinwieruch`,
-    `${USER_PATH}/Websites/roadtoreact.com`,
-    `${USER_PATH}/Websites/roadtographql.com`,
-    `${USER_PATH}/Websites/roadtofirebase.com`,
-    `${USER_PATH}/Websites/roadtoredux.com`,
-  ],
-  'rwieruch/roadtoreact.com': [
-    `${USER_PATH}/Websites/roadtoreact.com/content`,
-  ],
-  'rwieruch/roadtographql.com': [
-    `${USER_PATH}/Websites/roadtographql.com/content`,
-  ],
-  'rwieruch/roadtofirebase.com': [
-    `${USER_PATH}/Websites/roadtofirebase.com/content`,
-  ],
-  'rwieruch/roadtoredux.com': [
-    `${USER_PATH}/Websites/roadtoredux.com/content`,
-  ],
-  'rwieruch/blog_iamliesa_content': [
-    `${USER_PATH}/Websites/blog_iamliesa/content`,
-  ],
-  'rwieruch/blog_robinwieruch_content': [
-    `${USER_PATH}/Websites/blog_robinwieruch/content`,
-  ],
-  'rwieruch/github-webhook-automatic-blog-deployment': [
-    `${USER_PATH}/Webhooks/webhooks-blog`,
-  ],
-  'rwieruch/api.purchasing-power-parity.com': [
-    `${USER_PATH}/Microservices/api.purchasing-power-parity.com`,
-  ],
-  'rwieruch/purchasing-power-parity.com': [
-    `${USER_PATH}/Websites/purchasing-power-parity.com`,
-  ],
-  'rwieruch/reisebuero-bergfelde.de': [
-    `${USER_PATH}/Websites/bergfelde-reisen`,
+  'MatanMaimon/ResToRent': [
+    `${USER_PATH}/var/www/restorent.co.il`,
   ],
 };
 
@@ -73,4 +38,4 @@ http
 
     res.end();
   })
-  .listen(8080);
+  .listen(8073);
