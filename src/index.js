@@ -52,18 +52,18 @@ app.post('/', (req, res) => {
 
         
         // first, pull
-        output = `pulling "master" branch to ${entry.destDir}...\n`;
+        output += `pulling "master" branch to ${entry.destDir}...\n`;
         exec(`cd ${entry.destDir} && git pull --rebase origin master`);
 
         // check if need to `npm install` (if package.json was modified)
         if (req.body?.commits?.filter(commit => commit.modified?.indexOf('package.json')).length > 0) {
-          output = `npm install is need to be done ("package.json") was modified\n`;
+          output += `npm install is need to be done ("package.json") was modified\n`;
           exec(`cd ${entry.destDir} && npm install`);
         }
 
         // if the repo is server side (nodejs), restart the app
         if (entry.isServerSide) {
-          output = `this repo is server side, restart pm2 for the app "${entry.appName}"\n`;
+          output += `this repo is server side, restart pm2 for the app "${entry.appName}"\n`;
           exec(`pm2 stop ${entry.appName}`);
           exec(`pm2 restart ${entry.appName}`);
         }
@@ -72,11 +72,11 @@ app.post('/', (req, res) => {
         //exec(`cd ${entry} && bash ${webHookPath}/../webhook.sh`)
       });
 
-      output = `DONE!`;
+      output += `DONE!`;
       console.log('success');
     } catch (error) {
       
-      output = `ERROR!`;
+      output += `ERROR!`;
       console.log(error);
     }
   }
