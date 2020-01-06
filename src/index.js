@@ -56,8 +56,8 @@ app.post('/', (req, res) => {
         exec(`cd ${entry.destDir} && git pull --rebase origin master`);
 
         // check if need to `npm install` (if package.json was modified)
-        if (req.body?.commits?.filter(commit => commit.modified?.indexOf('package.json')).length > 0) {
-          output += `npm install is need to be done ("package.json") was modified\n`;
+        if (req.body?.commits?.filter(commit => commit.modified?.indexOf('package.json') >= 0).length > 0) {
+          output += `${req.body?.commits[0].modified.indexOf('package.json')} npm install is need to be done ("package.json") was modified\n`;
           exec(`cd ${entry.destDir} && npm install`);
         }
 
