@@ -25,6 +25,9 @@ app.use(bodyParser.json());
 
 app.post('/', (req, res) => {
 
+  // output to the end
+  let output = `Starting...\n`;
+
   const stringifyBody = JSON.stringify(req.body);
 
   // build the signature based on `SECRET` and body data
@@ -39,8 +42,6 @@ app.post('/', (req, res) => {
   const directory = GITHUB_TO_DIR[req.body?.repository?.full_name];
       
   if (isAllowed && isMaster && directory && directory.length) {
-    // output to the end
-    let output = `Starting...\n`;
 
     try {
       // the webhook.sh dir
