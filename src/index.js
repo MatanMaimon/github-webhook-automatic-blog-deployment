@@ -42,9 +42,6 @@ app.post('/', (req, res) => {
 
   if (isAllowed && isMaster && directory && directory.length) {
     try {
-      // the webhook.sh dir
-      const webHookPath = __dirname;
-
       // execute for each `directory` item
       directory.forEach(entry => {
         // first, pull
@@ -68,7 +65,6 @@ app.post('/', (req, res) => {
           exec(`cd ${entry.destDir} && pm2 restart ecosystem.config.js`);
         }
 
-        //exec(`cd ${entry} && bash ${webHookPath}/../webhook.sh`)
       });
 
       output += `DONE!`;
