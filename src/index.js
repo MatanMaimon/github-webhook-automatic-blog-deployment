@@ -1,42 +1,51 @@
 import 'dotenv/config';
-import http from 'http';
 import crypto from 'crypto';
 import { exec } from 'child_process';
+import express from 'express';
+import bodyParser from 'body-parser';
 
-// const USER_PATH = '/home/matan';
+
+const app = express();
+
 
 const GITHUB_TO_DIR = {
   'MatanMaimon/ResToRent': [
-    `/var/www/restorent.co.il`,
+    `/var/www/ResToRent`,
   ],
 };
 
-http
-  .createServer((req, res) => {
-    req.on('data', chunk => {
-      const signature = `sha1=${crypto
-        .createHmac('sha1', process.env.SECRET)
-        .update(chunk)
-        .digest('hex')}`;
 
-      const isAllowed = req.headers['x-hub-signature'] === signature;
+app.use(bodyParser.json());
 
-      const body = JSON.parse(chunk);
+app.post('/', (req, res) => {
 
-      const isMaster = body?.ref === 'refs/heads/master';
-      const directory = GITHUB_TO_DIR[body?.repository?.full_name];
+  const stringifyBody = JSON.stringify(req.body);
 
-      if (isAllowed && isMaster && directory && directory.length) {
-        try {
-          directory.forEach(entry => exec(`cd ${entry} && bash webhook.sh`));
-          console.log(directory);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    });
-    res.write('DONE!');
-    res.write(req);
-    res.end();
-  })
-  .listen(8073);
+  // build the signature based on `SECRET` and body data
+  const signature = `sha1=${crypto
+    .createHmac('sha1', process.env.SECRET)
+    .update(stringifyBody)
+    .digest('hex')}`;
+
+
+  const isAllowed = req.headers['x-hub-signature'] === signature;
+  const isMaster = req.body?.ref === 'refs/heads/master';
+  const directory = GITHUB_TO_DIR[req.body?.repository?.full_name];
+      
+  if (isAllowed && isMaster && directory && directory.length) {
+    try {
+      
+      // the webhook.sh dir
+      const webHookPath = __dirname;
+
+      // execute for each `directory` item
+      directory.forEach(entry => exec(`cd ${entry} && bash ${webHookPath}/../webhook.sh`));
+      console.log('success');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  res.send(200);
+});
+      
+app.listen(8073, () => console.log(`autoDeploy webhook is running!`));
