@@ -11,9 +11,6 @@ module.exports = {
     max_memory_restart: '256M',
     env: {
       SECRET: 'Dj2RT2swMrei'
-    },
-    env_production: {
-      SECRET: 'Dj2RT2swMrei'
     }
   }]
 };
