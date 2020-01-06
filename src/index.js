@@ -9,14 +9,14 @@ const app = express();
 const GITHUB_TO_DIR = {
   'MatanMaimon/ResToRent__server': [
     {
-      destDir: `~/gitRepos/ResToRent`,
+      destDir: `~/gitRepos/ResToRent__server`,
       isServerSide: true,
       appName: 'app',
     },
   ],
   'MatanMaimon/ResToRent__client': [
     {
-      destDir: `/var/www/ResToRent`,
+      destDir: `/var/www/ResToRent__client`,
       isClientSide: true,
     },
   ],
@@ -62,7 +62,7 @@ app.post('/', (req, res) => {
         if (entry.isServerSide) {
           output += `this repo is server side, restart pm2 for the app "${entry.appName}"\n`;
           // exec(`cd ${entry.destDir} && pm2 stop ecosystem.config.js`);
-          exec(`cd ${entry.destDir} && pm2 restart ecosystem.config.js`);
+          exec(`cd ${entry.destDir} && pm2 start ecosystem.config.js`);
         }
 
       });
