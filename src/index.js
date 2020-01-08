@@ -36,16 +36,16 @@ app.post('/', (req, res) => {
   const stringifyBody = JSON.stringify(req.body);
 
   // build the signature based on `SECRET` and body data
-  const signature = `sha1=${crypto
+  /*const signature = `sha1=${crypto
     .createHmac('sha1', process.env.SECRET)
     .update(stringifyBody)
     .digest('hex')}`;
 
   const isAllowed = req.headers['x-hub-signature'] === signature;
   const isMaster = req.body?.ref === 'refs/heads/master';
-  const directory = GITHUB_TO_DIR[req.body?.repository?.full_name];
+  const directory = GITHUB_TO_DIR[req.body?.repository?.full_name];*/
 
-  if (isAllowed && isMaster && directory && directory.length) {
+  //if (isAllowed && isMaster && directory && directory.length) {
     try {
       // execute for each `directory` item
       directory.forEach(entry => {
@@ -85,7 +85,7 @@ app.post('/', (req, res) => {
       output += `ERROR!`;
       console.log(error);
     }
-  }
+  //}
   res.send(output);
 });
 
