@@ -54,6 +54,7 @@ app.post('/', (req, res) => {
   if (isAllowed && isMaster && directory && directory.length) {
     try {
       // execute for each `directory` item
+          output += `adad3\n`;
   exec(`echo -f foo`, function(error, stdout, stderr) {
     
           output += `adad2\n`;
