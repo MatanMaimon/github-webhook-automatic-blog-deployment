@@ -21,7 +21,8 @@ const GITHUB_TO_DIR = {
   ],
   'MatanMaimon/github-webhook-automatic-deployment': [
     {
-      destDir: `~/gitRepos/github-webhook-automatic-deployment`
+      destDir: `~/gitRepos/github-webhook-automatic-deployment`,
+      isServerSide: true
     },
   ],
 };
