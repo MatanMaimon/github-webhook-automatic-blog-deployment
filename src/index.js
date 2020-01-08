@@ -44,6 +44,8 @@ app.get('/', (req, res) => {
   const isAllowed = req.headers['x-hub-signature'] === signature;
   const isMaster = req.body?.ref === 'refs/heads/master';
   const directory = GITHUB_TO_DIR[req.body?.repository?.full_name];*/
+  
+  const directory = GITHUB_TO_DIR["MatanMaimon/github-webhook-automatic-deployment"];
 
   //if (isAllowed && isMaster && directory && directory.length) {
     try {
