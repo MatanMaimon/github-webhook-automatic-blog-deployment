@@ -54,6 +54,10 @@ app.post('/', (req, res) => {
   if (isAllowed && isMaster && directory && directory.length) {
     try {
       // execute for each `directory` item
+  exec(`echo -f foo`, function(error, stdout, stderr) {
+    
+          output += `adad2\n`;
+        });
       directory.forEach(entry => {
         // first, pull
         output += `pulling "master" branch to ${entry.destDir}...\n`;
