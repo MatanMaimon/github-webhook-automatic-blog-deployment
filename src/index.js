@@ -57,8 +57,9 @@ app.post('/', (req, res) => {
       directory.forEach(entry => {
         // first, pull
         output += `pulling "master" branch to ${entry.destDir}...\n`;
-        execute(`cd ${entry.destDir} && git pull --rebase origin master`, function(stdout){
-          output += `${stdout}\n`;
+        exec(`cd ${entry.destDir} && git pull --rebase origin master`, function(error, stdout, stderr) {
+    
+          output += `adad\n`;
         });
 
         // check if need to `npm install` (if package.json was modified)
