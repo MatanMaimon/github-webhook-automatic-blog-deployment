@@ -29,7 +29,7 @@ const GITHUB_TO_DIR = {
 
 app.use(bodyParser.json());
 
-app.post('/', (req, res) => {
+app.get('/', (req, res) => {
   // output to the end
   let output = `Starting...\n`;
 
