@@ -50,10 +50,8 @@ app.post('/', (req, res) => {
       // execute for each `directory` item
       directory.forEach(entry => {
         // first, pull
-        setTimeout(() => {
-            output += `pulling "master" branch to ${entry.destDir}...\n`;
-            exec(`cd ${entry.destDir} && git pull --rebase origin master`);
-        }, 1500);
+        output += `pulling "master" branch to ${entry.destDir}...\n`;
+        exec(`cd ${entry.destDir} && bash ./executes/git_pull.sh`);
 
         // check if need to `npm install` (if package.json was modified)
         if (
@@ -62,7 +60,7 @@ app.post('/', (req, res) => {
           ).length > 0
         ) {
           output += `npm install is need to be done ("package.json") was modified\n`;
-          exec(`cd ${entry.destDir} && npm install`);
+          exec(`cd ${entry.destDir} && bash ./executes/npm_install.sh`);
         }
 
         // if the repo is server side (nodejs), restart the app
@@ -76,7 +74,7 @@ app.post('/', (req, res) => {
         if (entry.needWebpackBuild) {
           output += `this repo is client side & build with webpack (will run "npm build")\n`;
           // exec(`cd ${entry.destDir} && pm2 stop ecosystem.config.js`);
-          exec(`cd ${entry.destDir} && npm build`);
+          exec(`cd ${entry.destDir} && bash ./executes/npm_build.sh`);
         }
 
       });
