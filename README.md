@@ -1,4 +1,4 @@
-# github-webhook-automatic-blog-deployment
+# github-webhook-automatic-deployment
 
-- Running with `pm2 start npm --name "my-app-name" -- start` on [DigitalOcean](https://m.do.co/c/fb27c90322f3)
+- Running with `pm2 start ecosystem.config.js`
 - Restart with `pm2 restart "my-app-name"`
