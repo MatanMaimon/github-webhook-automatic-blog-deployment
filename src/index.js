@@ -6,6 +6,11 @@ import bodyParser from 'body-parser';
 
 const app = express();
 
+// polyfill the exec to custome execute
+function execute(command, callback){
+    exec(command, function(error, stdout, stderr){ callback(stdout); });
+};
+
 // map repos to local dirs
 const GITHUB_TO_DIR = {
   'MatanMaimon/ResToRent__server': [
@@ -52,7 +57,9 @@ app.post('/', (req, res) => {
       directory.forEach(entry => {
         // first, pull
         output += `pulling "master" branch to ${entry.destDir}...\n`;
-        exec(`cd ${entry.destDir} && git pull --rebase origin master`);
+        execute(`cd ${entry.destDir} && git pull --rebase origin master`, function(stdout){
+          output += `${stdout}\n`;
+        });
 
         // check if need to `npm install` (if package.json was modified)
         if (
