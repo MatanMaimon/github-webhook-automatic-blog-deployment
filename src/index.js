@@ -29,31 +29,29 @@ const GITHUB_TO_DIR = {
 
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
+app.post('/', (req, res) => {
   // output to the end
   let output = `Starting...\n`;
 
   const stringifyBody = JSON.stringify(req.body);
 
   // build the signature based on `SECRET` and body data
-  /*const signature = `sha1=${crypto
+  const signature = `sha1=${crypto
     .createHmac('sha1', process.env.SECRET)
     .update(stringifyBody)
     .digest('hex')}`;
 
   const isAllowed = req.headers['x-hub-signature'] === signature;
   const isMaster = req.body?.ref === 'refs/heads/master';
-  const directory = GITHUB_TO_DIR[req.body?.repository?.full_name];*/
-  
-  const directory = GITHUB_TO_DIR["MatanMaimon/github-webhook-automatic-deployment"];
+  const directory = GITHUB_TO_DIR[req.body?.repository?.full_name];
 
-  //if (isAllowed && isMaster && directory && directory.length) {
+  if (isAllowed && isMaster && directory && directory.length) {
     try {
       // execute for each `directory` item
       directory.forEach(entry => {
         // first, pull
         output += `pulling "master" branch to ${entry.destDir}...\n`;
-        exec(`cd ${entry.destDir} && bash ./executes/git_pull.sh`);
+        exec(`cd ${entry.destDir} && git pull --rebase origin master`);
 
         // check if need to `npm install` (if package.json was modified)
         if (
@@ -62,7 +60,7 @@ app.get('/', (req, res) => {
           ).length > 0
         ) {
           output += `npm install is need to be done ("package.json") was modified\n`;
-          exec(`cd ${entry.destDir} && bash ./executes/npm_install.sh`);
+          exec(`cd ${entry.destDir} && npm install`);
         }
 
         // if the repo is server side (nodejs), restart the app
@@ -76,7 +74,7 @@ app.get('/', (req, res) => {
         if (entry.needWebpackBuild) {
           output += `this repo is client side & build with webpack (will run "npm build")\n`;
           // exec(`cd ${entry.destDir} && pm2 stop ecosystem.config.js`);
-          exec(`cd ${entry.destDir} && bash ./executes/npm_build.sh`);
+          exec(`cd ${entry.destDir} && npm build`);
         }
 
       });
@@ -87,7 +85,7 @@ app.get('/', (req, res) => {
       output += `ERROR!`;
       console.log(error);
     }
-  //}
+  }
   res.send(output);
 });
 
