@@ -74,7 +74,7 @@ app.post('/', (req, res) => {
         if (entry.needWebpackBuild) {
           output += `this repo is client side & build with webpack (will run "npm build")\n`;
           // exec(`cd ${entry.destDir} && pm2 stop ecosystem.config.js`);
-          exec(`cd ${entry.destDir} && npm build`);
+          exec(`cd ${entry.destDir} && npm run build`);
         }
 
       });
