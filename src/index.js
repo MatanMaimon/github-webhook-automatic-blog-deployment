@@ -10,14 +10,18 @@ const GITHUB_TO_DIR = {
   'MatanMaimon/ResToRent__server': [
     {
       destDir: `~/gitRepos/ResToRent__server`,
-      isServerSide: true,
-      appName: 'app',
+      isServerSide: true
     },
   ],
   'MatanMaimon/ResToRent__client': [
     {
-      destDir: `/var/www/ResToRent__client`,
-      isClientSide: true,
+      destDir: `~/gitRepos/ResToRent__client`,
+      needWebpackBuild: true,
+    },
+  ],
+  'MatanMaimon/github-webhook-automatic-deployment': [
+    {
+      destDir: `~/gitRepos/github-webhook-automatic-deployment`
     },
   ],
 };
@@ -60,9 +64,16 @@ app.post('/', (req, res) => {
 
         // if the repo is server side (nodejs), restart the app
         if (entry.isServerSide) {
-          output += `this repo is server side, restart pm2 for the app "${entry.appName}"\n`;
+          output += `this repo is server side, restart pm2 for the app (by run "pm2 start ecosystem.config.js")\n`;
           // exec(`cd ${entry.destDir} && pm2 stop ecosystem.config.js`);
           exec(`cd ${entry.destDir} && pm2 start ecosystem.config.js`);
+        }
+
+        // if the repo is client side, build with webpack
+        if (entry.needWebpackBuild) {
+          output += `this repo is client side & build with webpack (will run "npm build")\n`;
+          // exec(`cd ${entry.destDir} && pm2 stop ecosystem.config.js`);
+          exec(`cd ${entry.destDir} && npm build`);
         }
 
       });
