@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 
 const app = express();
 
+// map repos to local dirs
 const GITHUB_TO_DIR = {
   'MatanMaimon/ResToRent__server': [
     {
