@@ -33,6 +33,9 @@ app.post('/', (req, res) => {
   // output to the end
   let output = `Starting...\n`;
 
+  // array of what to do in the execSync command (at last)
+  const toExec = [];
+
   const stringifyBody = JSON.stringify(req.body);
 
   // build the signature based on `SECRET` and body data
@@ -51,7 +54,8 @@ app.post('/', (req, res) => {
       directory.forEach(entry => {
         // first, pull
         output += `pulling "master" branch to ${entry.destDir}...\n`;
-        execSync(`cd ${entry.destDir} && git pull --rebase origin master`);
+        toExec.push('git pull --rebase origin master');
+        // execSync(`cd ${entry.destDir} && git pull --rebase origin master`);
 
         // check if need to `npm install` (if package.json was modified)
         if (
@@ -60,19 +64,22 @@ app.post('/', (req, res) => {
           ).length > 0
         ) {
           output += `"package.json" was modified. npm install (run "npm ci") is need to be done\n`;
-          execSync(`cd ${entry.destDir} && npm ci`);
+          toExec.push('npm ci');
+          // execSync(`cd ${entry.destDir} && npm ci`);
         }
 
         // if the repo is server side (nodejs), restart the app
         if (entry.isServerSide) {
           output += `this repo is server side, restart pm2 for the app (by run "pm2 start ecosystem.config.js")\n`;
-          execSync(`cd ${entry.destDir} && pm2 start ecosystem.config.js`);
+          toExec.push('pm2 start ecosystem.config.js');
+          // execSync(`cd ${entry.destDir} && pm2 start ecosystem.config.js`);
         }
 
         // if the repo is client side, build with webpack
         if (entry.needWebpackBuild) {
           output += `this repo is client side & build with webpack (will run "npm run build")\n`;
-          execSync(`cd ${entry.destDir} && npm run build`);
+          toExec.push('npm run build');
+          // execSync(`cd ${entry.destDir} && npm run build`);
         }
       });
 
@@ -84,6 +91,9 @@ app.post('/', (req, res) => {
     }
   }
   res.send(output);
+
+  // run the exec command as Sync
+  execSync(`cd ${entry.destDir} && ${toExec.join(' && ')}`);
 });
 
 app.listen(8073, () => console.log(`autoDeploy webhook is running!`));
