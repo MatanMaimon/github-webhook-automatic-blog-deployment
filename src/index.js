@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import crypto from 'crypto';
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import express from 'express';
 import bodyParser from 'body-parser';
 
@@ -10,7 +10,7 @@ const GITHUB_TO_DIR = {
   'MatanMaimon/ResToRent__server': [
     {
       destDir: `~/gitRepos/ResToRent__server`,
-      isServerSide: true
+      isServerSide: true,
     },
   ],
   'MatanMaimon/ResToRent__client': [
@@ -22,7 +22,7 @@ const GITHUB_TO_DIR = {
   'MatanMaimon/github-webhook-automatic-deployment': [
     {
       destDir: `~/gitRepos/github-webhook-automatic-deployment`,
-      isServerSide: true
+      isServerSide: true,
     },
   ],
 };
@@ -51,30 +51,29 @@ app.post('/', (req, res) => {
       directory.forEach(entry => {
         // first, pull
         output += `pulling "master" branch to ${entry.destDir}...\n`;
-        exec(`cd ${entry.destDir} && git pull --rebase origin master`);
+        execSync(`cd ${entry.destDir} && git pull --rebase origin master`);
 
         // check if need to `npm install` (if package.json was modified)
         if (
           req.body?.commits?.filter(
-            commit => commit.modified?.indexOf('package.json') >= 0,
+            commit => commit.modified?.indexOf('package.json') >= 0
           ).length > 0
         ) {
-          output += `npm install is need to be done ("package.json") was modified\n`;
-          exec(`cd ${entry.destDir} && npm ci`);
+          output += `"package.json" was modified. npm install (run "npm ci") is need to be done\n`;
+          execSync(`cd ${entry.destDir} && npm ci`);
         }
 
         // if the repo is server side (nodejs), restart the app
         if (entry.isServerSide) {
           output += `this repo is server side, restart pm2 for the app (by run "pm2 start ecosystem.config.js")\n`;
-          exec(`cd ${entry.destDir} && pm2 start ecosystem.config.js`);
+          execSync(`cd ${entry.destDir} && pm2 start ecosystem.config.js`);
         }
 
         // if the repo is client side, build with webpack
         if (entry.needWebpackBuild) {
           output += `this repo is client side & build with webpack (will run "npm run build")\n`;
-          exec(`cd ${entry.destDir} && npm run build`);
+          execSync(`cd ${entry.destDir} && npm run build`);
         }
-
       });
 
       output += `DONE!`;
