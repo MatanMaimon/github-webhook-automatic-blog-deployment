@@ -60,20 +60,18 @@ app.post('/', (req, res) => {
           ).length > 0
         ) {
           output += `npm install is need to be done ("package.json") was modified\n`;
-          exec(`cd ${entry.destDir} && npm install`);
+          exec(`cd ${entry.destDir} && npm ci`);
         }
 
         // if the repo is server side (nodejs), restart the app
         if (entry.isServerSide) {
           output += `this repo is server side, restart pm2 for the app (by run "pm2 start ecosystem.config.js")\n`;
-          // exec(`cd ${entry.destDir} && pm2 stop ecosystem.config.js`);
           exec(`cd ${entry.destDir} && pm2 start ecosystem.config.js`);
         }
 
         // if the repo is client side, build with webpack
         if (entry.needWebpackBuild) {
-          output += `this repo is client side & build with webpack (will run "npm build")\n`;
-          // exec(`cd ${entry.destDir} && pm2 stop ecosystem.config.js`);
+          output += `this repo is client side & build with webpack (will run "npm run build")\n`;
           exec(`cd ${entry.destDir} && npm run build`);
         }
 
