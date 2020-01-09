@@ -52,10 +52,8 @@ app.post('/', (req, res) => {
     try {
       // execute for each `directory` item
       directory.forEach(entry => {
-
         // will navigate to the relevant folder
         toExec.push(`cd ${entry.destDir}`);
-
 
         // first, pull
         output += `pulling "master" branch to ${entry.destDir}...\n`;
@@ -88,8 +86,7 @@ app.post('/', (req, res) => {
         }
       });
 
-      
-      output += `\nWILL EXECUTE:\n${}\n\n`;
+      output += `\nWILL EXECUTE:\n${toExec.join(' && ')}\n\n`;
 
       output += `DONE!`;
       console.log('success');
